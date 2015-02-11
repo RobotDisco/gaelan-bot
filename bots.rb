@@ -44,6 +44,7 @@ class MyBot < Ebooks::Bot
   def on_mention(tweet)
     # Reply to a mention
     # reply(tweet, "oh hullo")
+    reply(tweet, @model.make_response(tweet.text))
   end
 
   def on_timeline(tweet)
