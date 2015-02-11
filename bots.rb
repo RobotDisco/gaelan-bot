@@ -22,7 +22,7 @@ class MyBot < Ebooks::Bot
   def on_startup
     @model = Ebooks::Model.load('model/MentatMode.model')
 
-    scheduler.every '15m' do
+    scheduler.every '60m' do
       # Tweet something every hour
       # See https://github.com/jmettraux/rufus-scheduler
       # tweet("hi")
