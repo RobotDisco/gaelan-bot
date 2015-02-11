@@ -13,7 +13,7 @@ class MyBot < Ebooks::Bot
     self.consumer_secret = ENV['TWITTER_CONSUMER_SECRET'] # Your app consumer secret
 
     # Users to block instead of interacting with
-    self.blacklist = []
+    self.blacklist = ['cmcbot']
 
     # Range in seconds to randomize delay when bot.delay is called
     self.delay_range = 1..6
