@@ -86,7 +86,7 @@ class MyBot < Ebooks::Bot
 
     delay do
       if interesting
-        if rand < 0.001
+        if rand < 0.01
           userinfo(tweet.user.screen_name).pesters_left -= 1
           reply(tweet, model.make_response(meta(tweet).mentionless,
                                            meta(tweet).limit))
