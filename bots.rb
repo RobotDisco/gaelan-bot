@@ -1,6 +1,20 @@
 require 'twitter_ebooks'
 require 'twitter_ebooks/model'
 
+# Information about a particular Twitter user we know
+class UserInfo
+  attr_reader :username
+
+  # @return [Integer] how many times we can pester this user unprompted
+  attr_accessor :pesters_left
+
+  # @param username [String]
+  def initialize(username)
+    @username = username
+    @pesters_left = 10
+  end
+end
+
 # This is an example bot definition with event handlers commented out
 # You can define and instantiate as many bots as you like
 
@@ -16,18 +30,23 @@ class MyBot < Ebooks::Bot
     self.blacklist = ['cmcbot']
 
     # Range in seconds to randomize delay when bot.delay is called
-    self.delay_range = 1..6
+    self.delay_range = 1..900
   end
 
   def on_startup
     @model = Ebooks::Model.load('model/MentatMode.model')
+    @top200 = @model.keywords
 
-    scheduler.every '60m' do
+    scheduler.every '1h' do
       # Tweet something every hour
       # See https://github.com/jmettraux/rufus-scheduler
       # tweet("hi")
       # pictweet("hi", "cuteselfie.jpg")
       tweet @model.make_statement
+    end
+
+    scheduler.every '0 0 * * *' do
+      tweet "Hi, I have learned to talk with my friends :D Please tell @MentatMode if I accidentally upset you, I'm sorry :("
     end
   end
 
@@ -44,15 +63,50 @@ class MyBot < Ebooks::Bot
   def on_mention(tweet)
     # Reply to a mention
     # reply(tweet, "oh hullo")
-    response_delay = rand(ENV['GAELAN_MAX_DELAY_MINUTES'].to_i)
-    scheduler.in "#{response_delay}m" do
-      reply(tweet, @model.make_response(tweet.text))
+
+    # Become more inclined to pester a user when they talk to us
+    userinfo(tweet.user.screen_name).pesters_left += 1
+
+    delay do
+      reply(tweet, @model.make_response(meta(tweet).mentionless,
+                                        meta(tweet).limit))
     end
   end
 
   def on_timeline(tweet)
     # Reply to a tweet in the bot's timeline
     # reply(tweet, "nice tweet")
+
+    return if tweet.retweeted_status?
+    return unless can_pester?(tweet.user.screen_name)
+
+    tokens = Ebooks::NLP.tokenize(tweet.text)
+
+    interesting = tokens.find { |t| @top200.include?(t.downcase) }
+
+    delay do
+      if interesting
+        if rand < 0.001
+          userinfo(tweet.user.screen_name).pesters_left -= 1
+          reply(tweet, model.make_response(meta(tweet).mentionless,
+                                           meta(tweet).limit))
+        end
+      end
+    end
+  end
+
+  # Find information we've collected about a user
+  # @param username [String]
+  # @return [Ebooks::UserInfo]
+  def userinfo(username)
+    @userinfo[username] ||= UserInfo.new(username)
+  end
+
+  # Check if we're allowed to send unprompted tweets to a user
+  # @param username [String]
+  # @return [Boolean]
+  def can_pester?(username)
+    userinfo(username).pesters_left > 0
   end
 
   def on_favorite(user, tweet)
