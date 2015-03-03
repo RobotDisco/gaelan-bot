@@ -36,6 +36,7 @@ class MyBot < Ebooks::Bot
   def on_startup
     @model = Ebooks::Model.load('model/MentatMode.model')
     @top200 = @model.keywords
+    @userinfo = {}
 
     scheduler.every '1h' do
       # Tweet something every hour
