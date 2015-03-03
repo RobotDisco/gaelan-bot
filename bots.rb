@@ -11,7 +11,7 @@ class UserInfo
   # @param username [String]
   def initialize(username)
     @username = username
-    @pesters_left = 10
+    @pesters_left = 5
   end
 end
 
@@ -83,15 +83,11 @@ class MyBot < Ebooks::Bot
 
     tokens = Ebooks::NLP.tokenize(tweet.text)
 
-    interesting = tokens.find { |t| @top200.include?(t.downcase) }
-
     delay do
-      if interesting
-        if rand < 0.01
-          userinfo(tweet.user.screen_name).pesters_left -= 1
-          reply(tweet, model.make_response(meta(tweet).mentionless,
-                                           meta(tweet).limit))
-        end
+      if rand < 0.005
+        userinfo(tweet.user.screen_name).pesters_left -= 1
+        reply(tweet, model.make_response(meta(tweet).mentionless,
+                                         meta(tweet).limit))
       end
     end
   end
