@@ -45,7 +45,7 @@ class MyBot < Ebooks::Bot
       tweet @model.make_statement
     end
 
-    scheduler.every '0 0 * * *' do
+    scheduler.cron '0 0 * * *' do
       tweet "Hi, I have learned to talk with my friends :D Please tell @MentatMode if I accidentally upset you, I'm sorry :("
     end
   end
