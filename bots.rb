@@ -79,12 +79,13 @@ class MyBot < Ebooks::Bot
     # reply(tweet, "nice tweet")
 
     return if tweet.retweeted_status?
+    return unless meta(tweet).mentions.size > 0
     return unless can_pester?(tweet.user.screen_name)
 
     tokens = Ebooks::NLP.tokenize(tweet.text)
 
     delay do
-      if rand < 0.005
+      if rand < 0.05
         userinfo(tweet.user.screen_name).pesters_left -= 1
         reply(tweet, model.make_response(meta(tweet).mentionless,
                                          meta(tweet).limit))
