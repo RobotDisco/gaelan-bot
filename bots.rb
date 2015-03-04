@@ -81,7 +81,7 @@ class MyBot < Ebooks::Bot
     log "Received a tweet! #{tweet.source} #{tweet.text}"
     return if tweet.retweeted_status?
     log "Wasn't a retweet #{tweet.source} #{tweet.text}"
-    return unless meta(tweet).mentions.size > 0
+    return if meta(tweet).mentions.size > 0
     log "Didn't mention anybody #{tweet.source} #{tweet.text}"
     return unless can_pester?(tweet.user.screen_name)
     log "I can pester the author #{tweet.source} #{tweet.text}"
