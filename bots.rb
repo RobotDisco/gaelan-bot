@@ -78,13 +78,13 @@ class MyBot < Ebooks::Bot
     # Reply to a tweet in the bot's timeline
     # reply(tweet, "nice tweet")
 
-    log "Received a tweet! #{tweet}"
+    log "Received a tweet! #{tweet.source} #{tweet.text}"
     return if tweet.retweeted_status?
-    log "Wasn't a retweet #{tweet}"
+    log "Wasn't a retweet #{tweet.source} #{tweet.text}"
     return unless meta(tweet).mentions.size > 0
-    log "Didn't mention anybody #{tweet}"
+    log "Didn't mention anybody #{tweet.source} #{tweet.text}"
     return unless can_pester?(tweet.user.screen_name)
-    log "I can pester the author #{tweet}"
+    log "I can pester the author #{tweet.source} #{tweet.text}"
 
     tokens = Ebooks::NLP.tokenize(tweet.text)
 
@@ -95,7 +95,7 @@ class MyBot < Ebooks::Bot
                                          meta(tweet).limit))
       end
     else
-      puts "Choosing not to respond to #{tweet}"
+      log "Choosing not to respond to #{tweet.source} #{tweet.text}"
     end
   end
 
