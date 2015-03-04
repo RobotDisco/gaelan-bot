@@ -84,12 +84,14 @@ class MyBot < Ebooks::Bot
 
     tokens = Ebooks::NLP.tokenize(tweet.text)
 
-    delay do
-      if rand < 0.05
+    if rand < 0.05
+      delay do
         userinfo(tweet.user.screen_name).pesters_left -= 1
         reply(tweet, model.make_response(meta(tweet).mentionless,
                                          meta(tweet).limit))
       end
+    else
+      puts "Choosing not to respond to #{tweet}"
     end
   end
 
