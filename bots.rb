@@ -78,21 +78,17 @@ class MyBot < Ebooks::Bot
     # Reply to a tweet in the bot's timeline
     # reply(tweet, "nice tweet")
 
-    log "Received a tweet! #{tweet.source} #{tweet.text}"
     return if tweet.retweeted_status?
-    log "Wasn't a retweet #{tweet.source} #{tweet.text}"
     return if meta(tweet).mentions.size > 0
-    log "Didn't mention anybody #{tweet.source} #{tweet.text}"
     return unless can_pester?(tweet.user.screen_name)
-    log "I can pester the author #{tweet.source} #{tweet.text}"
 
     tokens = Ebooks::NLP.tokenize(tweet.text)
 
     if rand < 0.05
       delay do
         userinfo(tweet.user.screen_name).pesters_left -= 1
-        reply(tweet, model.make_response(meta(tweet).mentionless,
-                                         meta(tweet).limit))
+        reply(tweet, @model.make_response(meta(tweet).mentionless,
+                                          meta(tweet).limit))
       end
     else
       log "Choosing not to respond to #{tweet.source} #{tweet.text}"
