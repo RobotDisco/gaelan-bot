@@ -47,7 +47,7 @@ class MyBot < Ebooks::Bot
     end
 
     scheduler.cron '0 0 * * *' do
-      tweet "Hi, I have learned to talk with my friends :D Please tell @MentatMode if I accidentally upset you, I'm sorry :("
+      tweet "Hi, I have learned to talk with my friends :D Please tell @LambdaCalcuLich if I accidentally upset you, I'm sorry :("
     end
   end
 
