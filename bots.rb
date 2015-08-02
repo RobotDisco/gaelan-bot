@@ -1,6 +1,8 @@
 require 'twitter_ebooks'
 require 'twitter_ebooks/model'
 
+require_relative 'config'
+
 # Information about a particular Twitter user we know
 class UserInfo
   attr_reader :username
@@ -23,8 +25,8 @@ class MyBot < Ebooks::Bot
   def configure
     # Consumer details come from registering an app at https://dev.twitter.com/
     # Once you have consumer details, use "ebooks auth" for new access tokens
-    self.consumer_key = ENV['TWITTER_CONSUMER_KEY'] # Your app consumer key
-    self.consumer_secret = ENV['TWITTER_CONSUMER_SECRET'] # Your app consumer secret
+    self.consumer_key = CONFIG['TWITTER_CONSUMER_KEY'] # Your app consumer key
+    self.consumer_secret = CONFIG['TWITTER_CONSUMER_SECRET'] # Your app consumer secret
 
     # Users to block instead of interacting with
     self.blacklist = ['cmcbot', 'megbeepboop']
@@ -44,10 +46,6 @@ class MyBot < Ebooks::Bot
       # tweet("hi")
       # pictweet("hi", "cuteselfie.jpg")
       tweet @model.make_statement
-    end
-
-    scheduler.cron '0 0 * * *' do
-      tweet "Hi, I have learned to talk with my friends :D Please tell @LambdaCalcuLich if I accidentally upset you, I'm sorry :("
     end
   end
 
@@ -77,22 +75,6 @@ class MyBot < Ebooks::Bot
   def on_timeline(tweet)
     # Reply to a tweet in the bot's timeline
     # reply(tweet, "nice tweet")
-
-    return if tweet.retweeted_status?
-    return if meta(tweet).mentions.size > 0
-    return unless can_pester?(tweet.user.screen_name)
-
-    tokens = Ebooks::NLP.tokenize(tweet.text)
-
-    if rand < 0.05
-      delay do
-        userinfo(tweet.user.screen_name).pesters_left -= 1
-        reply(tweet, @model.make_response(meta(tweet).mentionless,
-                                          meta(tweet).limit))
-      end
-    else
-      log "Choosing not to respond to #{tweet.source} #{tweet.text}"
-    end
   end
 
   # Find information we've collected about a user
@@ -117,6 +99,6 @@ end
 
 # Make a MyBot and attach it to an account
 MyBot.new("gaelan_bot") do |bot|
-  bot.access_token = ENV['TWITTER_ACCESS_TOKEN'] # Token connecting the app to this account
-  bot.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET'] # Secret connecting the app to this account
+  bot.access_token = CONFIG['TWITTER_ACCESS_TOKEN'] # Token connecting the app to this account
+  bot.access_token_secret = CONFIG['TWITTER_ACCESS_TOKEN_SECRET'] # Secret connecting the app to this account
 end
