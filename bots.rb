@@ -25,7 +25,7 @@ class CassiniBot < Ebooks::Bot
   end
 
   def on_startup
-    scheduler.every '1m' do
+    scheduler.every '1h' do
       if (Random.rand <= 0.25)
         # We have about 126 characters to play with
         num_os = Random.rand(125) + 1
