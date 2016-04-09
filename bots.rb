@@ -26,11 +26,13 @@ class CassiniBot < Ebooks::Bot
 
   def on_startup
     scheduler.every '1m' do
-      # We have about 126 characters to play with
-      num_os = Random.rand(125) + 1
-      msg = "N#{"O" * num_os} Cassini can't be ending"
+      if (Random.rand <= 0.25)
+        # We have about 126 characters to play with
+        num_os = Random.rand(125) + 1
+        msg = "N#{'O' * num_os} Cassini can't be ending"
 
-      tweet msg
+        tweet msg
+      end
     end
   end
 end
