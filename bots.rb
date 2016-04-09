@@ -17,6 +17,24 @@ class UserInfo
   end
 end
 
+
+class CassiniBot < Ebooks::Bot
+  def configure
+    self.consumer_key = CONFIG['CASSINI_CONSUMER_KEY']
+    self.consumer_secret = CONFIG['CASSINI_CONSUMER_SECRET']
+  end
+
+  def on_startup
+    scheduler.every '1m' do
+      # We have about 126 characters to play with
+      num_os = Random.rand(125) + 1
+      msg = "N#{"O" * num_os} Cassini can't be ending"
+
+      tweet msg
+    end
+  end
+end
+
 # This is an example bot definition with event handlers commented out
 # You can define and instantiate as many bots as you like
 
@@ -101,4 +119,9 @@ end
 MyBot.new("gaelan_bot") do |bot|
   bot.access_token = CONFIG['TWITTER_ACCESS_TOKEN'] # Token connecting the app to this account
   bot.access_token_secret = CONFIG['TWITTER_ACCESS_TOKEN_SECRET'] # Secret connecting the app to this account
+end
+
+CassiniBot.new("CassiniNooo") do |bot|
+  bot.access_token = CONFIG['CASSINI_ACCESS_TOKEN']
+  bot.access_token_secret =  CONFIG['CASSINI_ACCESS_TOKEN_SECRET']
 end
