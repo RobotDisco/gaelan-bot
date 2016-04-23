@@ -1,3 +1,5 @@
+require 'date'
+
 require 'twitter_ebooks'
 require 'twitter_ebooks/model'
 
@@ -24,14 +26,27 @@ class CassiniBot < Ebooks::Bot
     self.consumer_secret = CONFIG['CASSINI_CONSUMER_SECRET']
   end
 
+  def say_nooo
+    # We have about 126 characters to play with
+    num_os = Random.rand(125) + 1
+    "N#{'O' * num_os} Cassini can't be ending"
+  end
+
+  def say_end_date
+    cassini_ends = Date.new(2017,9,15)
+    today = Date.today
+    difference = cassini_ends - today
+
+    "Only #{difference.floor} days until the Cassini mission ends :( :( :("
+
   def on_startup
     scheduler.every '1h' do
       if (Random.rand <= 0.25)
-        # We have about 126 characters to play with
-        num_os = Random.rand(125) + 1
-        msg = "N#{'O' * num_os} Cassini can't be ending"
-
-        tweet msg
+        if (Random.rand <= 0.125
+            tweet say_end_date()
+        else
+            tweet say_nooo()
+        end
       end
     end
   end
