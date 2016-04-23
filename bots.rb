@@ -42,7 +42,7 @@ class CassiniBot < Ebooks::Bot
   def on_startup
     scheduler.every '1h' do
       if (Random.rand <= 0.25)
-        if (Random.rand <= 0.125
+        if (Random.rand <= 0.125)
             tweet say_end_date()
         else
             tweet say_nooo()
