@@ -38,6 +38,7 @@ class CassiniBot < Ebooks::Bot
     difference = cassini_ends - today
 
     "Only #{difference.floor} days until the Cassini mission ends :( :( :("
+  end
 
   def on_startup
     scheduler.every '1h' do
