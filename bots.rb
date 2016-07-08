@@ -76,7 +76,7 @@ class MyBot < Ebooks::Bot
     @top200 = @model.keywords
     @userinfo = {}
 
-    scheduler.every '1h' do
+    scheduler.every '6h' do
       # Tweet something every hour
       # See https://github.com/jmettraux/rufus-scheduler
       # tweet("hi")
@@ -134,7 +134,7 @@ class MyBot < Ebooks::Bot
 end
 
 # Make a MyBot and attach it to an account
-MyBot.new("gaelan_bot") do |bot|
+MyBot.new("NaleagDeco") do |bot|
   bot.access_token = CONFIG['TWITTER_ACCESS_TOKEN'] # Token connecting the app to this account
   bot.access_token_secret = CONFIG['TWITTER_ACCESS_TOKEN_SECRET'] # Secret connecting the app to this account
 end
