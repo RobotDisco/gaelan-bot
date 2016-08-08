@@ -72,7 +72,7 @@ class MyBot < Ebooks::Bot
   end
 
   def on_startup
-    @model = Ebooks::Model.load('model/MentatMode.model')
+    @model = Ebooks::Model.load('model/NaleagDeco.model')
     @top200 = @model.keywords
     @userinfo = {}
 
