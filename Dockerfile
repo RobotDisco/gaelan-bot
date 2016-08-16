@@ -1,4 +1,4 @@
-FROM alpine:3.3
+FROM alpine:3.4
 MAINTAINER Gaelan D'costa <gdcosta@gmail.com>
 
 # Install base packages
@@ -6,19 +6,17 @@ MAINTAINER Gaelan D'costa <gdcosta@gmail.com>
 # RUN apk upgrade
 
 # Install deps & clean cache
-RUN apk add build-base --update ca-certificates ruby ruby-dev ruby-io-console ruby-bundler && \
+RUN apk add --update ruby ruby-dev ruby-bundler build-base && \
     rm -rf /var/cache/apk/*
 
 # Setup App
 RUN ["mkdir", "-p", "/srv/app"]
-
-COPY Gemfile Gemfile.lock bots.rb /srv/app/
-
 WORKDIR /srv/app
-RUN ["bundle", "install"]
 
-COPY config.rb /srv/app/
-COPY model /srv/app/model/
+COPY Gemfile Gemfile.lock /srv/app/
+RUN ["bundle", "install"]
+COPY bots.rb /srv/app/
+COPY model /srv/app/model
 
 # Run app
 CMD ["bundle", "exec", "ebooks", "start"]

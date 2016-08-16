@@ -3,8 +3,6 @@ require 'date'
 require 'twitter_ebooks'
 require 'twitter_ebooks/model'
 
-require_relative 'config'
-
 # Information about a particular Twitter user we know
 class UserInfo
   attr_reader :username
@@ -22,8 +20,8 @@ end
 
 class CassiniBot < Ebooks::Bot
   def configure
-    self.consumer_key = CONFIG['CASSINI_CONSUMER_KEY']
-    self.consumer_secret = CONFIG['CASSINI_CONSUMER_SECRET']
+    self.consumer_key = ENV['CASSINI_CONSUMER_KEY']
+    self.consumer_secret = ENV['CASSINI_CONSUMER_SECRET']
   end
 
   def say_nooo
@@ -61,8 +59,8 @@ class MyBot < Ebooks::Bot
   def configure
     # Consumer details come from registering an app at https://dev.twitter.com/
     # Once you have consumer details, use "ebooks auth" for new access tokens
-    self.consumer_key = CONFIG['TWITTER_CONSUMER_KEY'] # Your app consumer key
-    self.consumer_secret = CONFIG['TWITTER_CONSUMER_SECRET'] # Your app consumer secret
+    self.consumer_key = ENV['TWITTER_CONSUMER_KEY'] # Your app consumer key
+    self.consumer_secret = ENV['TWITTER_CONSUMER_SECRET'] # Your app consumer secret
 
     # Users to block instead of interacting with
     self.blacklist = ['cmcbot', 'megbeepboop']
@@ -135,11 +133,11 @@ end
 
 # Make a MyBot and attach it to an account
 MyBot.new("gaelan_bot") do |bot|
-  bot.access_token = CONFIG['TWITTER_ACCESS_TOKEN'] # Token connecting the app to this account
-  bot.access_token_secret = CONFIG['TWITTER_ACCESS_TOKEN_SECRET'] # Secret connecting the app to this account
+  bot.access_token = ENV['TWITTER_ACCESS_TOKEN'] # Token connecting the app to this account
+  bot.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET'] # Secret connecting the app to this account
 end
 
 CassiniBot.new("CassiniNooo") do |bot|
-  bot.access_token = CONFIG['CASSINI_ACCESS_TOKEN']
-  bot.access_token_secret =  CONFIG['CASSINI_ACCESS_TOKEN_SECRET']
+  bot.access_token = ENV['CASSINI_ACCESS_TOKEN']
+  bot.access_token_secret =  ENV['CASSINI_ACCESS_TOKEN_SECRET']
 end
