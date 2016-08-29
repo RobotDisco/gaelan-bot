@@ -11,10 +11,9 @@ I'd highly recommend reading twitter_ebook's instructions to figure out how to r
   * TWITTER_CONSUMER_SECRET
   * TWITTER_ACCESS_TOKEN
   * TWITTER_ACCESS_TOKEN_SECRET
-  * GAELAN_MAX_DELAY_MINUTES
-  
-This codebase is optimized to run on Heroku, which mostly means that I haven't thought very hard about running it in any way except the way I am.
+
+This codebase is optimized to run via Docker, which mostly means that I haven't thought very hard about running it in any way except the way I am.
   
 I hope you enjoy this! Hopefully I will have the chance to grow it into a monstrosity that will consume us all in time!
 
-Copyright (c) 2015 Gaelan D'costa, under the MIT license
+Copyright (c) 2016 Gaelan D'costa, under the MIT license
