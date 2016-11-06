@@ -1,4 +1,6 @@
 require 'date'
+require 'httparty'
+require 'json'
 
 require 'twitter_ebooks'
 require 'twitter_ebooks/model'
@@ -83,12 +85,59 @@ class MyBot < Ebooks::Bot
     # Once you have consumer details, use "ebooks auth" for new access tokens
     self.consumer_key = ENV['TWITTER_CONSUMER_KEY'] # Your app consumer key
     self.consumer_secret = ENV['TWITTER_CONSUMER_SECRET'] # Your app consumer secret
+    @lyrics_key = ENV['TWITTER_MUSIXMATCH_KEY'] # Key for accessing lyrics API
+
+    @singer_influences = [
+      538, # Jacques Brel
+      13182, # Scott Walker
+      12426703, # Grimes
+    ]
 
     # Users to block instead of interacting with
     self.blacklist = ['cmcbot', 'megbeepboop']
 
     # Range in seconds to randomize delay when bot.delay is called
     self.delay_range = 1..900
+  end
+
+  def lyrics_api_base(suffix)
+      'http://api.musixmatch.com/ws/1.1/' + suffix 
+  end
+
+  def sing_song
+      artist_pick = @singer_influences.sample
+
+      track_query = {
+        :query => {
+          apikey: @lyrics_key,
+          f_has_lyrics: '1',
+          f_artist_id: artist_pick,
+          page_size: 100
+        }
+      }
+      tracks = HTTParty.get(self.lyrics_api_base('track.search'), track_query).body
+      tracks = JSON.parse(tracks)['message']['body']['track_list'].map do |e|
+          [e['track']['track_id'], e['track']['track_share_url']]
+      end
+      track_id = tracks.sample
+      
+      lyric_query = {
+        :query => {
+          apikey: @lyrics_key,
+          track_id: track_id[0]
+        }
+      }
+      snippet = HTTParty.get(self.lyrics_api_base('track.snippet.get'), lyric_query).body
+
+      raw = JSON.parse(snippet)
+      snippet = raw['message']['body']['snippet']['snippet_body'].strip
+
+      if snippet.size > 138
+          raw = snippet[0...135]
+          raw << "..."
+      end
+      
+      "\u266A#{snippet}\u266A - #{track_id[1]}"
   end
 
   def on_startup
@@ -101,7 +150,11 @@ class MyBot < Ebooks::Bot
       # See https://github.com/jmettraux/rufus-scheduler
       # tweet("hi")
       # pictweet("hi", "cuteselfie.jpg")
-      tweet @model.make_statement
+      if (Random.rand <= 0.125)
+        tweet sing_song()
+      else
+        tweet @model.make_statement
+      end
     end
   end
 

@@ -30,10 +30,13 @@ GEM
       domain_name (~> 0.5)
     http-form_data (1.0.1)
     http_parser.rb (0.6.0)
+    httparty (0.14.0)
+      multi_xml (>= 0.5.2)
     json (1.8.3)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
+    multi_xml (0.5.5)
     multipart-post (2.0.0)
     naught (1.1.0)
     oauth (0.5.1)
@@ -77,8 +80,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  httparty
   rake
   twitter_ebooks
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
