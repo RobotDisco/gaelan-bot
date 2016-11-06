@@ -17,6 +17,28 @@ class UserInfo
   end
 end
 
+class DevoBot < Ebooks::Bot
+  def configure
+    self.consumer_key = ENV['DEVOBOT_CONSUMER_KEY']
+    self.consumer_secret = ENV['DEVOBOT_CONSUMER_SECRET']
+  end
+
+  def what_we_are(wordlist)
+    <<-EOF.gsub(/^\s+\|/, '')
+    |Q: Are We Not Men?
+    |A: We are #{wordlist.sample.strip.upcase}!
+    EOF
+  end
+
+  def on_startup
+    file = '/usr/share/dict/web2'
+    wordlist = File.open(file).readlines
+
+    scheduler.every '1h' do
+        tweet what_we_are(wordlist)
+    end
+  end
+end
 
 class CassiniBot < Ebooks::Bot
   def configure
@@ -140,4 +162,9 @@ end
 CassiniBot.new("CassiniNooo") do |bot|
   bot.access_token = ENV['CASSINI_ACCESS_TOKEN']
   bot.access_token_secret =  ENV['CASSINI_ACCESS_TOKEN_SECRET']
+end
+
+DevoBot.new("EveryDevo") do |bot|
+  bot.access_token = ENV['DEVOBOT_ACCESS_TOKEN']
+  bot.access_token_secret = ENV['DEVOBOT_ACCESS_TOKEN_SECRET']
 end
