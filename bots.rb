@@ -43,6 +43,13 @@ class DevoBot < Ebooks::Bot
 end
 
 class CassiniBot < Ebooks::Bot
+  def end_date
+    cassini_ends = Date.new(2017,9,15)
+    today = Date.today
+
+    cassini_ends - today
+  end
+
   def configure
     self.consumer_key = ENV['CASSINI_CONSUMER_KEY']
     self.consumer_secret = ENV['CASSINI_CONSUMER_SECRET']
@@ -55,15 +62,19 @@ class CassiniBot < Ebooks::Bot
   end
 
   def say_end_date
-    cassini_ends = Date.new(2017,9,15)
-    today = Date.today
-    difference = cassini_ends - today
+      "Only #{end_date.floor} days until the Cassini mission ends :( :( :("
+  end
 
-    "Only #{difference.floor} days until the Cassini mission ends :( :( :("
+  def say_dying_breath()
+    num_os = end_date.floor
+    num_dots = 140 - end_date
+    final_breath = 'O'.times(num_os) + '.'.times(num_dots)
+    final_breath[0] = 'N'
   end
 
   def on_startup
     scheduler.every '1h' do
+      return unless end_date > 140
       if (Random.rand <= 0.25)
         if (Random.rand <= 0.125)
             tweet say_end_date()
@@ -71,6 +82,10 @@ class CassiniBot < Ebooks::Bot
             tweet say_nooo()
         end
       end
+    end
+    scheduler.every '6h' do
+      return unless end_date <= 140
+      tweet say_dying_breath()
     end
   end
 end
