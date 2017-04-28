@@ -73,9 +73,9 @@ class CassiniBot < Ebooks::Bot
   end
 
   def on_startup
+    =begin
     scheduler.every '1h' do
-      return unless end_date > 140
-      if (Random.rand <= 0.25)
+    if (Random.rand <= 0.25)
         if (Random.rand <= 0.125)
             tweet say_end_date()
         else
@@ -83,6 +83,7 @@ class CassiniBot < Ebooks::Bot
         end
       end
     end
+    =end
     scheduler.every '6h' do
       return unless end_date <= 140
       tweet say_dying_breath()
