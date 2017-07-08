@@ -66,10 +66,11 @@ class CassiniBot < Ebooks::Bot
   end
 
   def say_dying_breath()
-    num_os = end_date.floor
+    num_os = [0, end_date.floor].max
     num_dots = 140 - end_date
-    final_breath = 'O'.times(num_os) + '.'.times(num_dots)
-    final_breath[0] = 'N'
+    final_breath = ('O' * num_os) + ('.' * num_dots)
+    final_breath[0] = 'N' if final_breath[0] == 'O'
+    final_breath
   end
 
   def on_startup
@@ -85,7 +86,6 @@ class CassiniBot < Ebooks::Bot
     end
 =end
     scheduler.every '6h' do
-      return unless end_date <= 140
       tweet say_dying_breath()
     end
   end
